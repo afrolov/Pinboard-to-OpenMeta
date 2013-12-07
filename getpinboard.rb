@@ -22,7 +22,7 @@ def pick_editor
 end
 
 require 'yaml'
-configfile = "#{ENV['HOME']}/getpinboard.yaml"
+configfile = "#{ENV['HOME']}/.getpinboard.yaml"
 
 # If config file `getpinboard.yaml` doesn't exist in the user's home folder,
 # create it, exit the script and open the config for editing.
@@ -49,20 +49,20 @@ user: pinboarduser
 password: pinboardpass
 # (string) Pinboard user and password
 #
-dateformat: US
-# (string) US (12-31-2011) or UK (31-12-2011)
+dateformat: ISO
+# (string) ISO (2011-12-31), US (12-31-2011), or UK (31-12-2011)
 #
-target: #{ENV['HOME']}/Dropbox/Sync/Bookmark
+target: #{ENV['HOME']}/Dropbox/Pinboard/Bookmark
 # (absolute path) Location for webloc files
 #
-db_location: #{ENV['HOME']}/Dropbox/Sync/Bookmark
+db_location: #{ENV['HOME']}/Dropbox/Pinboard/Bookmark
 # (absolute path) Location for the database. Can be the same as target.
 #
 pdf_tag: pdfit
 # (string) If this tag exists on a bookmark, save a PDF (false to disable)
 # requires latest version of <http://derailer.org/paparazzi/>
 #
-pdf_location: #{ENV['HOME']}/Dropbox/Sync/WebPDF
+pdf_location: #{ENV['HOME']}/Dropbox/Pinboard/WebPDF
 # (absolute path) Location for PDF files, if pdf_tag option above is set and triggered
 #
 tag_method: #{default_tagger}
@@ -735,6 +735,7 @@ new_bookmarks.each {|bookmark|
     om_tags = tags.join(' ')
     dateformat = "%m-%d-%Y %I:%M%p"
     dateformat = "%d-%m-%Y %I:%M%p" if $conf['dateformat'] && $conf['dateformat'] =~ /uk/i
+    dateformat = "%Y-%m-%d %HH:%MM" if $conf['dateformat'] && $conf['dateformat'] =~ /iso/i
     date = Time.parse(bookmark['time']).strftime(dateformat)
     util.debug_msg("Grabbing #{title}, tagging with \"#{tags_app_tags}\"",false)
     tagscommand = $conf['tag_method'] == 1 ? %Q{tell application "Tags" to apply tags {"#{tags_app_tags}"} to files} : "return"
